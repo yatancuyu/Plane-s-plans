@@ -2,17 +2,6 @@ import pygame
 import random
 
 
-class Parameter(pygame.sprite.Sprite):
-    def __init__(self, group, x, y):
-        super().__init__(group)
-        self.image = pygame.image.load("data/param.png")
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-
-
-
-
 class Bullet(pygame.sprite.Sprite):
 
     def __init__(self, group, x, y):
@@ -39,11 +28,9 @@ class Plane(pygame.sprite.Sprite):
         keys = args[0]
         csen = [(273, (0, -5)), (274, (0, 5)), (275, (5, 0)), (276, (-5, 0))]
         for i in csen:
-            if keys[i[0]] and 0 <= self.rect.x + i[1][0] <= 450 and 0 <= self.rect.y + i[1][1] <= 760:
+            if keys[i[0]] and 0 <= self.rect.x + i[1][0] <= 450 and 250 <= self.rect.y + i[1][1] <= 760:
                 self.rect = self.rect.move(*i[1])
                 print(self.rect)
-
-
 
 
 class Background(pygame.sprite.Sprite):
@@ -81,7 +68,6 @@ def main():
 
     screen = pygame.display.set_mode((500, 800))
     all_sprites = pygame.sprite.Group()
-    Parameter(all_sprites, 5, 50)
     plane = pygame.sprite.Group()
     Plane(plane)
     running = True
@@ -91,25 +77,32 @@ def main():
     for i in range(9):
         cds.append(Clouds(sky))
     clock = pygame.time.Clock()
+    in_menu = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.KEYUP and event.key == 32:
-                for i in plane:
-                    Bullet(all_sprites, i.rect.x, i.rect.y)
+            if event.type == pygame.KEYUP:
+                if event.key == 32:
+                    for i in plane:
+                        Bullet(all_sprites, i.rect.x, i.rect.y)
+                if event.key == 102:
+                    in_menu = False
+
         bg_1.update()
         bg_2.update()
         for i in cds:
             i.update()
         sky.draw(screen)
-        pygame.draw.rect(screen,(0, 255, 0), (28, 76, 107, 23))
         all_sprites.draw(screen)
         plane.draw(screen)
         all_sprites.update(pygame.key.get_pressed())
 
         plane.update(pygame.key.get_pressed())
         clock.tick(30)
+        if in_menu:
+            screen.fill((0, 0, 0))
+
         pygame.display.flip()
     pygame.quit()
 
