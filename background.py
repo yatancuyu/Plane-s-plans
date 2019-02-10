@@ -68,7 +68,6 @@ while running:
     screen.fill((0, 0, 0))
     bg_1.update()
     bg_2.update()
-    ship.update()
     for i in cds:
         i.update()
     for i in isls:
