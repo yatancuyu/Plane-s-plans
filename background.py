@@ -19,6 +19,7 @@ class Background(pygame.sprite.Sprite):
         self.rect.y = inputed
 
     def update(self):
+        '''Движение фонового моря'''
         if self.rect.y == 800:
             self.rect.y = -800
         self.rect = self.rect.move(0, 1)
@@ -33,6 +34,7 @@ class Clouds(pygame.sprite.Sprite):
         self.rect.y = random.randrange(-800, -75)
 
     def update(self):
+        '''Рандомное появление в различных точках экрана'''
         if self.rect.y == 801:
             self.rect.x = random.randrange(-50, 375)
             self.rect.y = random.randrange(-1500, -75)
@@ -48,6 +50,7 @@ class Island(pygame.sprite.Sprite):
         self.rect.y = inputed[1]
 
     def update(self, ind):
+        '''Рандомное появление в различных точках экрана'''
         if self.rect.y >= 801:
             self.rect.x = random.randrange(10, 400)
             self.rect.y = random.randrange(-1500, -75)
