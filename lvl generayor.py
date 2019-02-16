@@ -8,7 +8,7 @@ info = [("PLANE'S", 100, 250, 25, True), ("PLANS", 100, 250, 125, True), ("LEVEL
         ["5. ESCAPE       000000", 25, 225, 350, False],
         ["6. EVERGONE       000000", 25, 225, 375, False],
         ["7. THE_END      000000", 25, 225, 400, False], ["PRESS F TO START", 25, 275, 700, True]]
-with open("menu_list.json", "w") as s:
+with open("data/menu_list.json", "w") as s:
     json.dump(info, s)
 lvls_info = [[2300, {"1": "Background(\"data/sprites/background/ship.png\", -214,2400)",
                      "0": " Background('data/sprites/background/see.jpg', -16420, 2400)",
@@ -33,5 +33,5 @@ lvls_info = [[2300, {"1": "Background(\"data/sprites/background/ship.png\", -214
                      "403": "EnemyKnight(400, 127)",
                      "404": "EnemyKnight(450, 300)",
                      "2300": "Background(\"data/sprites/background/ship.png\", -1014,2400)"}]]
-with open("lvls_info.json", "w") as fileone:
+with open("data/lvls_info.json", "w") as fileone:
     json.dump(lvls_info, fileone)
