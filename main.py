@@ -4,8 +4,12 @@ import math
 import random
 
 score = [0]
+
+
 class EnemyKnight(pygame.sprite.Sprite):
-    def __init__(self, x,stop_y):
+    '''Маневрирующий самолетик'''
+
+    def __init__(self, x, stop_y):
         super().__init__(enemy_pawns)
         self.add(enemy_planes, all_sprites)
         self.frames = []
@@ -13,22 +17,25 @@ class EnemyKnight(pygame.sprite.Sprite):
         self.frame = 5
         self.cur_frame = 0
         self.cut_sheet(pygame.image.load("data/sprites/planes/KnightPlane.png"), 4, 1)
-        self.image = pygame.transform.scale(self.frames[self.cur_frame], (int(18 * 2), int(14*2)))
+        self.image = pygame.transform.scale(self.frames[self.cur_frame], (int(18 * 2), int(14 * 2)))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = -20
         self.started = False
         self.stop_y = stop_y
         self.cooldown = 20
-        rand = random.randint(2,5)
-        self.speeds = ((0,rand),(rand,rand),(-rand,0),(-rand,rand),(0,-rand),(rand,-rand),(rand,0),(rand,rand))
+        random_element = random.randint(2, 3)
+        self.speeds = (
+            (0, random_element), (random_element, random_element), (-random_element, 0),
+            (-random_element, random_element), (0, -random_element), (random_element, -random_element),
+            (random_element, 0), (random_element, random_element))
 
         self.speed_x = 0
-        self.speed_y = rand
+        self.speed_y = random_element
         self.change_time = 0
 
-
     def cut_sheet(self, sheet, columns, rows):
+        '''Раскадровка'''
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
         for j in range(rows):
@@ -37,16 +44,17 @@ class EnemyKnight(pygame.sprite.Sprite):
                 self.frames.append(sheet.subsurface(pygame.Rect(
                     frame_location, self.rect.size)))
 
-
-    def change_speed(self,cur_speed):
-        new_speed = self.speeds[(self.speeds.index(cur_speed)+1)%len(self.speeds)]
-        self.speed_x,self.speed_y = new_speed
+    def change_speed(self, cur_speed):
+        '''Смена скоростей'''
+        new_speed = self.speeds[(self.speeds.index(cur_speed) + 1) % len(self.speeds)]
+        self.speed_x, self.speed_y = new_speed
 
     def update(self, *args):
-        if self.rect.y >= self.stop_y and not(self.started):
-            self.change_speed((self.speed_x,self.speed_y))
+        '''ИИ, управляющий движения, стрельбой самолета'''
+        if self.rect.y >= self.stop_y and not (self.started):
+            self.change_speed((self.speed_x, self.speed_y))
             self.started = True
-        if self.started and not(self.change_time):
+        if self.started and not (self.change_time):
             print(random.random())
             self.change_speed((self.speed_x, self.speed_y))
             self.change_time = 50
@@ -62,24 +70,22 @@ class EnemyKnight(pygame.sprite.Sprite):
         if self.rect.y > 780 and self.speed_y > 0:
             self.change_speed((self.speed_x, self.speed_y))
 
-
         if not (self.cooldown):
             Bullet(self.rect.x + self.rect.w // 2, self.rect.y + self.rect.h, 2)
-            self.cooldown = 60
+            self.cooldown = 100
         self.cooldown -= 1 if self.cooldown else 0
         self.mask = pygame.mask.from_surface(self.image)
 
-
         if not (self.frame):
             self.cur_frame = (self.cur_frame + 1) % 2
-            self.image = pygame.transform.scale(self.frames[2:][self.cur_frame], (int(18 * 2), int(14* 2)))
+            self.image = pygame.transform.scale(self.frames[2:][self.cur_frame], (int(18 * 2), int(14 * 2)))
             self.frame = 5
         self.frame -= 1 if self.frame else 0
 
 
-
-
 class EnemyBishop(pygame.sprite.Sprite):
+    '''Самолет вылетающий сзади игрока'''
+
     def __init__(self, x):
         super().__init__(enemy_bishops)
         self.add(enemy_planes, all_sprites)
@@ -99,6 +105,7 @@ class EnemyBishop(pygame.sprite.Sprite):
         self.speed_y = -3
 
     def cut_sheet(self, sheet, columns, rows):
+        '''Раскадровка'''
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
         for j in range(rows):
@@ -108,6 +115,7 @@ class EnemyBishop(pygame.sprite.Sprite):
                     frame_location, self.rect.size)))
 
     def update(self, *args):
+        '''ИИ, управляющий движения, стрельбой самолета'''
         if not (self.frame):
             self.cur_frame = (self.cur_frame + 1) % 2
             self.image = pygame.transform.scale(self.frames[self.cur_frame], (int(32 * 2.5), int(23 * 2.5)))
@@ -119,7 +127,7 @@ class EnemyBishop(pygame.sprite.Sprite):
         self.rect = self.rect.move(self.speed_x, self.speed_y)
         if not (self.cooldown):
             Bullet(self.rect.x + self.rect.w // 2, self.rect.y + self.rect.h, 2)
-            self.cooldown = 50
+            self.cooldown = 60
         self.cooldown -= 1 if self.cooldown else 0
         self.mask = pygame.mask.from_surface(self.image)
         for i in bullets:
@@ -134,6 +142,8 @@ class EnemyBishop(pygame.sprite.Sprite):
 
 
 class EnemyKing(pygame.sprite.Sprite):
+    '''Босс'''
+
     def __init__(self):
         super().__init__(enemy_king)
         self.add(enemy_planes, all_sprites)
@@ -143,7 +153,7 @@ class EnemyKing(pygame.sprite.Sprite):
         self.frame = 5
         self.phase_change = [False, False, True]
         self.cur_frame = 0
-        self.cut_sheet(pygame.image.load("data/KingPlane.png"), 15, 1)
+        self.cut_sheet(pygame.image.load("data/sprites/planes/KingPlane.png"), 15, 1)
         self.image = pygame.transform.scale(self.frames[self.cur_frame], (int(67 * 3), int(48 * 3)))
 
         self.rect = self.image.get_rect()
@@ -157,6 +167,7 @@ class EnemyKing(pygame.sprite.Sprite):
         self.speed_y = 5
 
     def cut_sheet(self, sheet, columns, rows):
+        '''Раскадровка'''
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
         for j in range(rows):
@@ -166,6 +177,7 @@ class EnemyKing(pygame.sprite.Sprite):
                     frame_location, self.rect.size)))
 
     def update(self, *args):
+        '''ИИ, управляющий движениями, стрельбой самолета'''
         if not (self.frame) and self.lifes > 10:
             self.cur_frame = (self.cur_frame + 1) % 2
             self.image = pygame.transform.scale(self.frames[self.cur_frame], (int(67 * 3), int(48 * 3)))
@@ -224,11 +236,13 @@ class EnemyKing(pygame.sprite.Sprite):
             self.speed_x = 3
         if self.rect.x >= 500 - self.rect.w + 50:
             self.speed_x = -3
-        if not(self.phase_change[1]):
+        if not (self.phase_change[1]):
             self.rect = self.rect.move(self.speed_x, self.speed_y)
 
 
 class Implosion(pygame.sprite.Sprite):
+    '''Спрайт взрыва'''
+
     def __init__(self, x, y, w, h, code):
         super().__init__(implosions)
         self.add(all_sprites)
@@ -250,6 +264,7 @@ class Implosion(pygame.sprite.Sprite):
         self.frame = 5
 
     def cut_sheet(self, sheet, columns, rows):
+        '''Раскадровка'''
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
         for j in range(rows):
@@ -259,6 +274,7 @@ class Implosion(pygame.sprite.Sprite):
                     frame_location, self.rect.size)))
 
     def update(self, *args):
+        '''Смена кадров'''
         if not (self.frame):
             self.cur_frame = (self.cur_frame + 1) % len(self.frames)
             self.image = pygame.transform.scale(self.frames[self.cur_frame], (self.size_x, self.size_y))
@@ -269,6 +285,8 @@ class Implosion(pygame.sprite.Sprite):
 
 
 class EnemyPawn(pygame.sprite.Sprite):
+    '''Самолет летающий по горизонтали и вертикально'''
+
     def __init__(self, x, y, vx, vy):
         super().__init__(enemy_pawns)
         self.add(enemy_planes, all_sprites)
@@ -283,14 +301,16 @@ class EnemyPawn(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.image, math.degrees(math.atan(vx / vy)))
 
     def update(self, *args):
+        '''ИИ, управляющий движения, стрельбой самолета'''
         self.rect = self.rect.move(self.speed_x, self.speed_y)
         if not (self.cooldown):
             Bullet(self.rect.x + self.rect.w, self.rect.y + self.rect.h, 2)
-            self.cooldown = 60
+            self.cooldown = 100
         self.cooldown -= 1 if self.cooldown else 0
 
 
 class Bullet(pygame.sprite.Sprite):
+    '''Пули'''
 
     def __init__(self, x, y, code):
         super().__init__(bullets)
@@ -309,6 +329,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y = y
 
     def update(self, *keys):
+        '''Движение пуль, обработка столкновений'''
         self.rect = self.rect.move(self.speed_x, self.speed_y)
         if self.rect.y < -12:
             self.kill()
@@ -322,6 +343,7 @@ class Bullet(pygame.sprite.Sprite):
 
 
 class Plane(pygame.sprite.Sprite):
+    '''Самолет игрока'''
 
     def __init__(self, start, finish):
         self.start = start
@@ -336,9 +358,10 @@ class Plane(pygame.sprite.Sprite):
         self.size = 0.5
         self.autopilot_start = None
         self.cooldown = 0
-        self.invinc = 60
+        self.invulnerability = 60
 
     def cut_sheet(self, sheet, columns, rows):
+        '''Раскадровка'''
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
         for j in range(rows):
@@ -357,7 +380,7 @@ class Plane(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(self.frames[self.cur_frame], (int(66 * self.size), int(60 * self.size)))
             if args[0] > self.start:
                 self.size = 1
-        if self.start < args[0] < self.finish - 200:  ##Управление
+        if self.start < args[0] < self.finish - 50:  ##Управление
             keys = args[1]
             csen = [(273, (0, -5)), (274, (0, 5)), (275, (5, 0)), (276, (-5, 0))]
             for i in csen:
@@ -369,6 +392,7 @@ class Plane(pygame.sprite.Sprite):
 
         if self.finish - 50 == args[0]:  ## Заход на посадку
             self.autopilot_start = (self.rect.x, self.rect.y)
+            self.invulnerability = 9000
         if self.finish - 50 < args[0] <= self.finish:
             self.rect = self.rect.move(round((220 - self.autopilot_start[0]) / 50),
                                        round((600 - self.autopilot_start[1]) / 50))
@@ -377,8 +401,8 @@ class Plane(pygame.sprite.Sprite):
             self.size = 1 - (args[0] - self.finish) / 400
         self.cooldown -= 1 if self.cooldown else 0
         self.mask = pygame.mask.from_surface(self.image)
-        self.invinc -= 1 if self.invinc else 0
-        if not (self.invinc):
+        self.invulnerability -= 1 if self.invulnerability else 0
+        if not (self.invulnerability):
             for i in bullets:
                 if pygame.sprite.collide_mask(self, i) and i.code == 2:
                     self.kill()
@@ -393,6 +417,8 @@ class Plane(pygame.sprite.Sprite):
 
 
 class Background(pygame.sprite.Sprite):
+    '''Фоны игры'''
+
     def __init__(self, img_path, y, finish):
         super().__init__(bg_sprites)
         self.add(all_sprites)
@@ -403,13 +429,15 @@ class Background(pygame.sprite.Sprite):
         self.rect.y = y
 
     def update(self, *args):
+        '''Движение фонов'''
         if args[0] < self.finish + 150:
             self.rect = self.rect.move(0, 2)
         if self.rect.y >= 800:
             self.kill()
 
 
-def inmenu(screen, clock):
+def inmenu(screen):
+    '''Меню игры'''
     global info
     screen.fill((0, 0, 0))
     with open("data/menu_list.json") as file:
@@ -443,20 +471,19 @@ def inmenu(screen, clock):
                 text_x = i[2] - text.get_width() // 2
                 text_y = i[3]
                 screen.blit(text, (text_x, text_y))
-        clock.tick(30)
-        info[-1][-1] = not (info[-1][-1])
         selector_s.draw(screen)
         pygame.display.flip()
 
 
 def main():
+    '''Игровой экшн'''
     with open("data/lvls_info.json") as fileone:
         lvls_info = json.load(fileone)
     global all_sprites, bullets, enemy_planes, implosions, plane, bg_sprites, enemy_pawns, enemy_king, enemy_bishops, enemy_knights
     pygame.init()
     screen = pygame.display.set_mode((500, 800))
     clock = pygame.time.Clock()
-    data = inmenu(screen, clock)
+    data = inmenu(screen)
     running = data[0]
     lvl_map = lvls_info[data[1]][1]
     finish = lvls_info[data[1]][0]
@@ -476,7 +503,7 @@ def main():
 
     Plane(200, finish)
 
-    lifes = 5
+    lifes = 6
     respawntime = 0
     frames = 0
 
@@ -494,9 +521,7 @@ def main():
         if lifes != 0 and respawntime == 1:
             respawntime = 0
             lifes -= 1
-            Plane(200,finish)
-
-
+            Plane(200, finish)
 
         all_sprites.update(frames, pygame.key.get_pressed())
         all_sprites.draw(screen)
@@ -516,23 +541,24 @@ def main():
         frames += 1
         if lifes == 0 and respawntime == 1:
             running = False
-            gameover(screen, clock, 0, data[1], data[2])
+            gameover(screen, 0, data[1], data[2])
         if frames == finish + 205:
             running = False
-            gameover(screen, clock,1, data[1], data[2])
+            gameover(screen, 1, data[1], data[2])
     pygame.quit()
 
 
-def gameover(screen, clock, code, lvl_num, info):
+def gameover(screen, code, lvl_num, info):
     running = True
     if code:
         with open("data\menu_list.json", "w") as file:
             try:
                 info[lvl_num + 4][-1] = True
-                rewrite = info[lvl_num+3][0].split()
+                rewrite = info[lvl_num + 3][0].split()
                 rewrite[-1] = str(score[0]).rjust(6, '0')
-                info[lvl_num + 3][0] = rewrite[0]+" "+rewrite[1]+"        "+rewrite[-1]
+                info[lvl_num + 3][0] = rewrite[0] + " " + rewrite[1] + "        " + rewrite[-1]
                 json.dump(info, file)
+                score[0] -= score[0]
             except Exception:
                 pass
 
@@ -562,7 +588,6 @@ def gameover(screen, clock, code, lvl_num, info):
                 text_x = i[2] - text.get_width() // 2
                 text_y = i[3]
                 screen.blit(text, (text_x, text_y))
-        clock.tick(30)
         info[-1][-1] = not (info[-1][-1])
         pygame.display.flip()
     pygame.quit()
