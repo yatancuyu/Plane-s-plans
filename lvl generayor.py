@@ -16,8 +16,8 @@ with open("data/menu_list.json", "w") as s:
 # "EnemyKnight(250,200)"
 # "EnemyKnight(125,100)"
 # "EnemyKnight(125,400)"
-lvls_info = [[3400, {"1": "Background(\"data/sprites/background/ship.png\", -214,3400)",
-                     "0": " Background('data/sprites/background/see.jpg', -16420, 3500)",
+lvls_info = [[3400, {"1": "Background(\"data/sprites/backgrounds/ship.png\", -214,3400)",
+                     "0": " Background('data/sprites/backgrounds/see.jpg', -16420, 3500)",
                      "202": "EnemyPawn(-30,50,2,2)",
                      "203": "EnemyPawn(500,50,-2,2)",
                      "204": "EnemyPawn(275,-30,0,3)",
@@ -26,7 +26,7 @@ lvls_info = [[3400, {"1": "Background(\"data/sprites/background/ship.png\", -214
                      "257": "EnemyKnight(125,100)",
                      "258": "EnemyKnight(125,400)",
 
-                     "300": "Background(\"data/sprites/background/city.png\", -4000,3100)",
+                     "300": "Background(\"data/sprites/backgrounds/city.png\", -4000,3100)",
                      "402": "EnemyBishop(125)",
                      "456": "EnemyKnight(250,200)",
                      "457": "EnemyKnight(125,100)",
@@ -45,7 +45,7 @@ lvls_info = [[3400, {"1": "Background(\"data/sprites/background/ship.png\", -214
                      "1303": "EnemyPawn(500,50,-2,2)",
                      "1304": "EnemyPawn(275,-30,0,3)",
                      "1305": "EnemyPawn(225,-30,0,3)",
-                     "1500": "Background(\"data/sprites/background/oasis.png\", -3266,3100)",
+                     "1500": "Background(\"data/sprites/backgrounds/oasis.png\", -3266,3100)",
                      "1602": "EnemyKing()",
                      "1802": "EnemyBishop(250)",
                      "2002": "EnemyBishop(125)",
@@ -56,9 +56,9 @@ lvls_info = [[3400, {"1": "Background(\"data/sprites/background/ship.png\", -214
                      "3002": "EnemyBishop(250)",
                      "3202": "EnemyBishop(125)",
 
-                     "3400": "Background(\"data/sprites/background/ship.png\", -1014,3500)"}],
-             [3400, {"1": "Background(\"data/sprites/background/ship.png\", -214,3400)",
-                     "0": " Background('data/sprites/background/see.jpg', -16420, 3500)",
+                     "3400": "Background(\"data/sprites/backgrounds/ship.png\", -1014,3500)"}],
+             [3400, {"1": "Background(\"data/sprites/backgrounds/ship.png\", -214,3400)",
+                     "0": " Background('data/sprites/backgrounds/see.jpg', -16420, 3500)",
                      "202": "EnemyPawn(-30,50,2,2)",
                      "203": "EnemyPawn(500,50,-2,2)",
                      "204": "EnemyPawn(275,-30,0,3)",
@@ -67,14 +67,14 @@ lvls_info = [[3400, {"1": "Background(\"data/sprites/background/ship.png\", -214
                      "207": "EnemyKnight(125,100)",
                      "208": "EnemyKnight(125,400)",
 
-                     "300": "Background(\"data/sprites/background/city.png\", -4000,3100)",
+                     "300": "Background(\"data/sprites/backgrounds/city.png\", -4000,3100)",
                      "402": "EnemyBishop(125)",
 
                      "602": "EnemyBishop(250)",
                      "802": "EnemyBishop(125)",
                      "1002": "EnemyBishop(250)",
                      "1202": "EnemyBishop(125)",
-                     "1500": "Background(\"data/sprites/background/oasis.png\", -3266,3100)",
+                     "1500": "Background(\"data/sprites/backgrounds/oasis.png\", -3266,3100)",
                      "1602": "EnemyKing()",
                      "1802": "EnemyBishop(250)",
                      "2002": "EnemyBishop(125)",
@@ -85,7 +85,7 @@ lvls_info = [[3400, {"1": "Background(\"data/sprites/background/ship.png\", -214
                      "3002": "EnemyBishop(250)",
                      "3202": "EnemyBishop(125)",
 
-                     "3400": "Background(\"data/sprites/background/ship.png\", -1014,3500)"}]
+                     "3400": "Background(\"data/sprites/backgrounds/ship.png\", -1014,3500)"}]
              ]
 with open("data/lvls_info.json", "w") as fileone:
     json.dump(lvls_info, fileone)
